@@ -35,22 +35,21 @@ def estimate(fxi, h):
 	fxi_est = []
 	for i in range(len(fxi)):
 		fxi_est.append(derive(fxi, i, h))
-	print("Input array: {0}\nOutput array: {1}\nWith an h value of h={2}".format(fxi, fxi_est, h))
+	#print("Input array: {0}\nOutput array: {1}\nWith an h value of h={2}".format(fxi, fxi_est, h))
 	return fxi_est
 
 
 def derive(fxi, n, h):
-	est = 0
-	if n < 2:
-		# five point forward difference
-		est = (-25 * fxi[n] + 48 * fxi[n + 1] - 36 * fxi[n + 2] + 16 * fxi[n + 3] - 3 * fxi[n + 4]) / (12 * h)
-	elif n <= len(fxi) - 3:
-		# five point midpoint
-		est = (fxi[n - 2] - 8 * fxi[n - 1] + 8 * fxi[n + 1] - fxi[n + 2]) / (12 * h)
-	elif n <= len(fxi) - 1:
-		# five point backward difference
-		est = (-25 * fxi[n] + 48 * fxi[n - 1] - 36 * fxi[n - 2] + 16 * fxi[n - 3] - 3 * fxi[n - 4]) / (-12 * h)
-	return est
+    if n < 2:
+        #five point forward difference
+        est = (-25*fxi[n] + 48*fxi[n+1] - 36*fxi[n+2] + 16*fxi[n+3] - 3*fxi[n+4])/(12*h)
+    elif n <= len(fxi) - 3:
+        #five point midpoint
+        est = (fxi[n-2]-8*fxi[n-1] + 8*fxi[n+1]-fxi[n+2])/(12*h)
+    else:
+        #five point backward difference
+        est = (-25*fxi[n] + 48*fxi[n-1] - 36*fxi[n-2] + 16*fxi[n-3] - 3*fxi[n-4])/(-12*h)
+    return est
 
 
 def spline(xi, fxi):
