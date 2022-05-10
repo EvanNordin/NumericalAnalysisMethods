@@ -53,7 +53,7 @@ def derive(fxi, n, h):
 	return est
 
 
-def divided_differences(xi, fxi, verbose):
+def divided_differences(xi, fxi, verbose, use_prime):
 	n = len(fxi)
 	orders = [[0 for _ in range(n)] for _ in range(n)]
 
@@ -68,7 +68,7 @@ def divided_differences(xi, fxi, verbose):
 			fxi_estimate.append(fxi[i])
 
 	fxi_prime = []
-	if verbose: 	# only false when we get the original equation at the beginning of the run method
+	if use_prime: 	
 		if len(fxi_estimate) < 5:
 			fxi_prime = [float(f) for f in input("Enter the derivative values separated by a comma: ").replace(" ", "").split(",")]
 		else:
@@ -160,7 +160,7 @@ def hermite(xi, fxi):
 		fxi_hermite.append(f)
 		fxi_hermite.append(f)
 
-	eqn, x_vals, y_vals = divided_differences(xi_hermite, fxi_hermite, True)
+	eqn, x_vals, y_vals = divided_differences(xi_hermite, fxi_hermite, True, True)
 	return eqn, x_vals, y_vals
 
 

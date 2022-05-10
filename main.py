@@ -12,7 +12,7 @@ def run():
     x_lim = plt.xlim()
     y_lim = plt.ylim()
 
-    equation = divided_differences(xi, fxi, False)[0]
+    equation = divided_differences(xi, fxi, False, False)[0]
 
     for method in methods:
         if method == "m":
@@ -31,7 +31,7 @@ def run():
 
         elif method == "ldd":
             print("Divided Differences Method:")
-            equation, x_vals, y_vals = divided_differences(xi, fxi, True)
+            equation, x_vals, y_vals = divided_differences(xi, fxi, True, False)
             plt.plot(x_vals, y_vals, label="Lagrange - Divided Difference", color='red')
             print("=-=-=-"*6+"=")
 
