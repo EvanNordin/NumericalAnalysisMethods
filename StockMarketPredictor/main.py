@@ -13,48 +13,15 @@ def run():
     y_lim = plt.ylim()
 
 
-    """
+    
     print("Cubic Spline:")
     spline(xi, fxi)
     print("=-=-=-" * 6 + "=")
-    """
-    day_vals = [[] for _ in range(len(xi)+1)]
-    for i in range(3, len(xi)+1):
-        day_vals[i] = [xi[x] for x in range(i)]
-    day_vals = day_vals[3:]
 
-    money = 5000
-    starting_money = money
-    open_price = fxi[0]
-    close_price = fxi[-1]
-    value_at_time = 0
-    shares_held = 0
-    
-    for day_val in day_vals:
-        action = spline(day_val, fxi)
+    print("Numerical Differentiation:")
+    estimate(fxi, 30)
+    print("=-=-=-" * 6 + "=")
 
-        time = day_val[-1]
-        value_at_time = fxi[xi.index(time)]
-        could_buy = math.floor(money/value_at_time)
-        
-        if action == "buy":
-            if could_buy > 0:
-                print("Buying at x={0}, f(x)={1}".format(time, value_at_time))
-                shares_held += could_buy
-                money -= could_buy * value_at_time
-        elif action == "sell":
-            if shares_held > 0:
-                print("Selling at x={0}, f(x)={1}".format(time, value_at_time))
-                money += shares_held * value_at_time
-                shares_held = 0
-
-    #EOD sale
-    money += shares_held * value_at_time
-
-    price_diff = close_price - open_price
-    data = [[open_price, close_price, price_diff, money, money - starting_money, (money - starting_money) - price_diff]]
-    print(tabulate(data, headers=["Open Price", "Close Price", "Price Change", "Total Money", "Day Profit", "Profit Over Average"]))
-    
     plt.xlim(x_lim)
     plt.ylim(y_lim)
     plt.grid(which='major', axis='both')
@@ -63,11 +30,8 @@ def run():
 
 
 def gather_data():
-    xi = get_x_values()
-    fxi = get_y_values(xi)
-
-    if not xi:
-        xi = [i for i in range(len(fxi))]
+    xi = get_values("xFile.txt")
+    fxi = get_values("yFile.txt")
 
     data = [[] for _ in range(len(xi))]
     for i in range(len(xi)):
@@ -76,53 +40,16 @@ def gather_data():
 
     return xi, fxi
 
-
-def get_x_values():
+def get_values(filename):
     try:
-        #xi = input("Enter x values separated by comma, path and name of datafile, or nothing: ")
-        #if xi == "":
-        #    pass
-        #elif "," in xi:
-        #    xi = [float(f) for f in xi.split(",")]
-        #else:
-        with open("xFile.txt", 'r') as file:
-            xi = []
+        with open(filename, 'r') as file:
+            data = []
             for line in file:
-                xi.append(float(line.strip("\n").replace(" ", "")))
+                data.append(float(line.strip("\n").replace(" ", "")))
     except FileNotFoundError:
         print("File not found")
         sys.exit()
-    except ValueError:
-        print("Bad dataset")
-        sys.exit()
-    return xi
-
-
-def get_y_values(xi):
-    try:
-        #fxi = input("Enter y values separated by comma, or path and name of datafile: ")
-        #if "," in fxi:
-        #    fxi = [float(f) for f in fxi.split(",")]
-        #else:
-        #    try:
-        #        f = sp.sympify(fxi)
-        #        x = sp.symbols('x')
-        #        fxi = [f.subs(x, i) for i in xi]
-        #        print(f)
-        #        print(fxi)
-        #    except ValueError:
-        with open("yFile.txt", 'r') as file:
-            fxi = []
-            for line in file:
-                if line.strip("\n"):
-                    fxi.append(float(line.strip("\n").replace(" ", "")))
-    except FileNotFoundError:
-        print("File not found")
-        sys.exit()
-    except ValueError:
-        print("Bad dataset")
-        sys.exit()
-    return fxi
+    return data
 
 
 if __name__ == "__main__":

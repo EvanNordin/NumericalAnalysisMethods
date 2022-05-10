@@ -20,6 +20,7 @@ def evaluate(f, start, end, step):
         y_vals.append(calc(f, i))
     return x_vals, y_vals
 
+
 def n_deriv(fx, n):
     x = sp.symbols('x')
     f = fx
@@ -28,6 +29,28 @@ def n_deriv(fx, n):
         df_i = deriv_list[-1].diff(x).replace(sp.Derivative, lambda *args: f(x))
         deriv_list.append(df_i)
     return deriv_list
+
+
+def estimate(fxi, h):
+	fxi_est = []
+	for i in range(len(fxi)):
+		fxi_est.append(derive(fxi, i, h))
+	print("Input array: {0}\nOutput array: {1}\nWith an h value of h={2}".format(fxi, fxi_est, h))
+	return fxi_est
+
+
+def derive(fxi, n, h):
+	est = 0
+	if n < 2:
+		# five point forward difference
+		est = (-25 * fxi[n] + 48 * fxi[n + 1] - 36 * fxi[n + 2] + 16 * fxi[n + 3] - 3 * fxi[n + 4]) / (12 * h)
+	elif n <= len(fxi) - 3:
+		# five point midpoint
+		est = (fxi[n - 2] - 8 * fxi[n - 1] + 8 * fxi[n + 1] - fxi[n + 2]) / (12 * h)
+	elif n <= len(fxi) - 1:
+		# five point backward difference
+		est = (-25 * fxi[n] + 48 * fxi[n - 1] - 36 * fxi[n - 2] + 16 * fxi[n - 3] - 3 * fxi[n - 4]) / (-12 * h)
+	return est
 
 
 def spline(xi, fxi):
@@ -90,82 +113,13 @@ def spline(xi, fxi):
         eqn = "{1}+{2}*(x-{0})+{3}*(x-{0})**2+{4}*(x-{0})**3".format(xi[i], a[i], matrix_bj[i], matrix_cj[i], matrix_dj[i])
         eqn = sp.sympify(eqn)
         eqns[i] = eqn
-
-    #print(xi)
-    index = 0
-    shares_held = 0
-    money = 50000
-    current_value = 0
-    open_price = 0
-    close_price = 0
-    risky_strat = False
-    open_price = fxi[0]
-    action_ledger = []
-    for _ in eqns:
-        derivs = n_deriv(eqns[index], 3)
-        first_deriv = derivs[1]
-        second_deriv = derivs[2]
-        third_deriv = derivs[3]
-
-        current_value = calc(derivs[0], xi[index+1])
-        first_deriv_y = calc(first_deriv, xi[index+1])
-        second_deriv_y = calc(second_deriv, xi[index+1]-1)
-        third_deriv_y = calc(third_deriv, xi[index+1])
-
-        #print(second_deriv_y)
-
-        could_buy = math.floor(money / current_value)
         
-        if xi[index+1] != 390:
-            if first_deriv_y >= 0 and second_deriv_y >= 0:
-                #if could_buy > 0:
-                action_ledger.append("buy")
-                    #print("Definite buy at x={0}".format(xi[index+1]))
-                    #shares_held += could_buy
-                    #money -= current_value * could_buy
-            elif first_deriv_y >= 0 and second_deriv_y <= 0:
-                
-                #if risky_strat:
-                action_ledger.append("sell")
-                    #print("Risky sell at x={0}".format(xi[index+1]))
-                    #money += current_value * shares_held
-                    #shares_held = 0
+    for i in range(len(eqns)):
+        print("({2}<= x <= {3}): S_{0} = {1}".format(i, eqns[i], xi[i], xi[i+1]))
+        x_vals, y_vals = evaluate(eqns[i], xi[i], xi[i+1], 0.1)
+        plt.plot(x_vals, y_vals)
 
-            elif first_deriv_y <= 0 and second_deriv_y >= 0:
-                
-                #if risky_strat and could_buy > 0:
-                action_ledger.append("buy")
-                    #print("Risky buy at x={0}".format(xi[index+1]))
-                    #shares_held += could_buy
-                    #money -= current_value * could_buy
 
-            elif first_deriv_y <= 0 and second_deriv_y <= 0:
-                action_ledger.append("sell")
-                #print("Definite sell at x={0}".format(xi[index+1]))
-                #money += current_value * shares_held
-                #shares_held = 0
-            
-            
-
-        #print("Shares held: {0} -- Money: {1}".format(shares_held, money))
-        index += 1
-    #print(eqns[-1])
-    #return action_ledger[-1]
-    #close_price = current_value
-    #value = shares_held*current_value + money
-    #print("Shares at the end of the day: {0}\nPrice per share: {1}".format(shares_held, current_value))
-    #print("You made: {0}\nIndex rose: {1}\nGain over expected: {2}".format(value, close_price - open_price, value - (close_price - open_price)))
-    #price_diff = close_price - open_price
-    #data = [[open_price, close_price, price_diff, shares_held, value, value - price_diff]]
-    #print(tabulate(data, headers=["Open Price", "Close Price", "Price Change", "User Shares Held", "Total Value", "Change Over Holding"]))
-    
-    #for i in range(len(eqns)):
-    #    print("S_{0} = {1}".format(i, eqns[i]))
-    #    x_vals, y_vals = evaluate(eqns[i], xi[i], xi[i+1], 0.1)
-    #    plt.plot(x_vals, y_vals)
-
-    print("({0}<= x <= {1})\nS_{2} = {3}".format(xi[-2], xi[-1], len(eqns)-1, eqns[-1]))
     x_vals, y_vals = evaluate(eqns[-1], xi[-2], xi[-1], 0.1)
     plt.plot(x_vals, y_vals)
-    return action_ledger[-1]
-
+    return
