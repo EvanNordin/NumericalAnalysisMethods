@@ -22,6 +22,8 @@ def run():
     shares = 0
     
     print("Numerical Differentiation:")
+
+    data = [[] for _ in range(len(xi))]
     for i in range(len(xi)):
         try:
             if i == len(xi):
@@ -43,6 +45,7 @@ def run():
             second_deriv = (deriv[-1]-deriv[-2])/(xi[i]-xi[i-1])
             print("Second derivative between x={0} and x={1}: {2}".format(xi[i-1], xi[i], second_deriv))
 
+            data[i] = [xi[i], fxi[i], deriv[-1], second_deriv]
             current_price = fxi[i]
             
             could_buy = math.floor(money / current_price)
@@ -52,17 +55,21 @@ def run():
                     print("Should buy at x={0}".format(xi[i]))
                     if could_buy > 0:
                         print("Can buy")
+                        plt.scatter(xi[i], fxi[i], color='blue')
                         money -= could_buy * current_price
                         shares += could_buy
                 if deriv[-2] > 0 and deriv[-1] < 0:
                     print("Should sell at x={0}".format(xi[i]))
                     if shares > 0:
                         print("Can sell")
+                        plt.scatter([xi[i]], [fxi[i]], color='red')
                         money += shares * current_price
                         shares = 0
             print("=====")
         except IndexError:
             print("Not enough datapoints for current method at x={0}".format(xi[i]))
+
+    print(tabulate(data, headers=["x", "f(x)", "f'(x)", "f''(x)"]))
             
     print("=-=-=-" * 6 + "=")
     money += shares*current_price
