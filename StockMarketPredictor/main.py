@@ -18,7 +18,7 @@ def run():
     #spline(xi, fxi)
     print("=-=-=-" * 6 + "=")
 
-    money = 5000
+    money = 50000
     shares = 0
     
     print("Numerical Differentiation:")
@@ -29,7 +29,7 @@ def run():
             else:
                 deriv = estimate(fxi[0:i], xi[1]-xi[0])
 
-            plt.plot([xi[i-1], xi[i]], [deriv[-2], deriv[-1]], label="Deriv at x={0}".format(xi[i]))
+            #plt.plot([xi[i-1], xi[i]], [deriv[-2], deriv[-1]], label="Deriv at x={0}".format(xi[i]))
             print("Derivative at {0}: {2} --- derivative at {1}: {3}".format(xi[i-1], xi[i], deriv[-2], deriv[-1]))
 
             #print(xi[0:i])
@@ -63,15 +63,19 @@ def run():
             print("=====")
         except IndexError:
             print("Not enough datapoints for current method at x={0}".format(xi[i]))
+            
     print("=-=-=-" * 6 + "=")
     money += shares*current_price
     print("We have ${0}".format(money))
     print("The stock market rose: {0}".format(fxi[-1]-fxi[0]))
-    print("We made ${0}".format(money-5000))
-    print("We outperformed by ${0}".format((money-5000)-(fxi[-1]-fxi[0])))
+    print("We made ${0}".format(money-50000))
+    print("We outperformed by ${0}".format((money-50000)-(fxi[-1]-fxi[0])))
     
     plt.xlim(x_lim)
     plt.ylim(y_lim)
+    plt.title("Price of Bitcoin 5/1/2022 8:00 am - 5/7/2022 4:00 am")
+    plt.ylabel("Price USD")
+    plt.xlabel("Mintues Since 5/1/2022 8:00 am")
     #plt.ylim((-5, 5))
     plt.grid(which='major', axis='both')
     plt.legend(loc="upper left")
