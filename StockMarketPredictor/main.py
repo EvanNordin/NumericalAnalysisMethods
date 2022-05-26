@@ -85,15 +85,23 @@ def run():
     print("The stock market rose: {0}".format(fxi[-1]-fxi[0]))
     print("We made ${0}".format(money-50000))
     print("We outperformed by ${0}".format((money-50000)-(fxi[-1]-fxi[0])))
-    print("The points we should interpolate are: ", interpolationPoints)
+    print("Interpolation points: " + str(interpolationPoints[0][0]))
 
+    #building a cubic spline with the interpolation points
+    my_xis = []
+    my_fxis = []
+    for i in range(len(interpolationPoints)):
+        my_xis.append(interpolationPoints[i][0])
+        my_fxis.append(interpolationPoints[i][1])
     
+    cubic_spline = spline(my_xis, my_fxis)
+
     
     plt.xlim(x_lim)
     plt.ylim(y_lim)
     plt.title("Price of Bitcoin 5/1/2022 8:00 am - 5/7/2022 4:00 am")
     plt.ylabel("Price USD")
-    plt.xlabel("Mintues Since 5/1/2022 8:00 am")
+    plt.xlabel("Minutes Since 5/1/2022 8:00 am")
     #plt.ylim((-5, 5))
     plt.grid(which='major', axis='both')
     plt.legend(loc="upper left")
