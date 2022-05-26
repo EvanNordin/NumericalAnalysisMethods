@@ -1,5 +1,7 @@
+# %%
 import yfinance as yf
 from datetime import datetime
+from NumericalMethods import *
 
 #ticker = "^GSPC"
 ticker = "BTC-USD"
@@ -7,7 +9,7 @@ stock_ticker = yf.Ticker(ticker)
 interval = "1"
 
 start_day = datetime(2022, 5, 1, 0, 0, 0, 0)
-end_day = datetime(2022, 5, 8, 0, 0, 0, 0)
+end_day = datetime(2022, 5, 7, 0, 0, 0, 0)
 #day_info = stock_ticker.history(period='1d')
 #day_info = stock_ticker.history(start = "2022-03-18", end = "2022-03-18", interval="{0}m".format(interval))
 #day_info = stock_ticker.history(start = "2022-05-04", end = "2022-05-05", interval="{0}m".format(interval))
@@ -32,3 +34,5 @@ with open("yFile.txt", "w") as data_file:
                     data_file.write(str(round(row["Close"], 2))+"\n")
                     x_file.write(str(int(interval)*value_count)+"\n")
                     break
+
+# %%

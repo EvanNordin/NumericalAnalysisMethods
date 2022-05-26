@@ -1,5 +1,4 @@
 import sys
-
 import matplotlib.pyplot as plt
 
 from NumericalMethods import *
@@ -125,3 +124,5 @@ def get_y_values(xi):
 
 if __name__ == "__main__":
     run()
+
+# %%

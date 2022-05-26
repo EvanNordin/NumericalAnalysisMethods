@@ -1,3 +1,5 @@
+# %%
+
 import sys
 
 import matplotlib.pyplot as plt
@@ -20,6 +22,8 @@ def run():
 
     money = 50000
     shares = 0
+
+    interpolationPoints = []
     
     print("Numerical Differentiation:")
 
@@ -56,6 +60,8 @@ def run():
                     if could_buy > 0:
                         print("Can buy")
                         plt.scatter(xi[i], fxi[i], color='blue')
+                        #make a tuple of xi[i] and fxi[i] and append to interpolation point list
+                        interpolationPoints.append((xi[i], fxi[i]))
                         money -= could_buy * current_price
                         shares += could_buy
                 if deriv[-2] > 0 and deriv[-1] < 0:
@@ -63,6 +69,8 @@ def run():
                     if shares > 0:
                         print("Can sell")
                         plt.scatter([xi[i]], [fxi[i]], color='red')
+                        #make a tuple of xi[i] and fxi[i] and append to interpolation point list
+                        interpolationPoints.append((xi[i], fxi[i]))
                         money += shares * current_price
                         shares = 0
             print("=====")
@@ -77,6 +85,9 @@ def run():
     print("The stock market rose: {0}".format(fxi[-1]-fxi[0]))
     print("We made ${0}".format(money-50000))
     print("We outperformed by ${0}".format((money-50000)-(fxi[-1]-fxi[0])))
+    print("The points we should interpolate are: ", interpolationPoints)
+
+    
     
     plt.xlim(x_lim)
     plt.ylim(y_lim)
@@ -114,3 +125,5 @@ def get_values(filename):
 
 if __name__ == "__main__":
     run()
+
+# %%
